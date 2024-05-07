@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/Providers/ThemeProvider";
 import Navbar from "@/components/navbar/Navbar";
+import ReactQueryProvider from "@/Providers/ReactQueryProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,17 +21,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          disableTransitionOnChange
-          defaultTheme="system"
-          enableSystem
-        >
-          <div className="relative w-full h-full">
-            <Navbar />
-            {children}
-          </div>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            disableTransitionOnChange
+            defaultTheme="system"
+            enableSystem
+          >
+            <div className="relative w-full h-full">
+              <Navbar />
+              {children}
+            </div>
+            <Toaster richColors position="bottom-right" theme="dark" />
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
