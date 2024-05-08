@@ -9,13 +9,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async session({ session, token }) {
       // Remove or set emailVerified to undefined
-      console.log("object ", session);
       return session;
     },
     async signIn({ user }) {
-      console.log("user ", user);
       return true;
     },
-
   },
 });

@@ -41,18 +41,16 @@ const DesktopView = () => {
 
 const MobileView = () => {
   return (
-    <div className="md:hidden w-full ">
-      <nav className="h-[50px] mx-[10px] flex justify-between items-center border-b-red-600">
-        <div className="flex gap-3">
-          <Sidebar />
-          <Logo />
-        </div>
-        <div className="flex gap-3">
-          <ThemeSwitcher />
-          <ProfileIcon />
-        </div>
-      </nav>
-    </div>
+    <nav className="md:hidden h-[50px] mx-[10px] w-full flex justify-between items-center">
+      <div className="flex gap-3">
+        <Sidebar />
+        <Logo />
+      </div>
+      <div className="flex gap-3 ">
+        <ThemeSwitcher />
+        <ProfileIcon />
+      </div>
+    </nav>
   );
 };
 

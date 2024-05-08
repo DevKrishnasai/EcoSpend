@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/Providers/ThemeProvider";
 import Navbar from "@/components/navbar/Navbar";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider";
 import { Toaster } from "sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto({ weight: "700", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,10 +28,8 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
           >
-            <div className="relative w-full h-full">
-              <Navbar />
-              {children}
-            </div>
+            <Navbar />
+            <div className="w-screen h-full ">{children}</div>
             <Toaster richColors position="bottom-right" theme="dark" />
           </ThemeProvider>
         </ReactQueryProvider>

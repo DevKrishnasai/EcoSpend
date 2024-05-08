@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { TUser } from "@/lib/schema";
+import { TUser } from "@/utils/types";
 
 const SearchBoxForCountries = ({
   register,
@@ -31,14 +31,14 @@ const SearchBoxForCountries = ({
   const [open, setOpen] = useState(false);
   const [country, setCountry] = useState(value);
   return (
-    <section className="flex justify-start items-center gap-20">
+    <section className="flex justify-start items-center gap-5 md:gap-20">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[400px] justify-between"
+            className="w-[200px] md:w-[400px] justify-between"
           >
             {country
               ? currencies.find((currency) => currency.country === country)
@@ -48,13 +48,13 @@ const SearchBoxForCountries = ({
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-[400px] p-0">
+        <PopoverContent className="w-[200px] md:w-[400px] p-0">
           <Command>
             <CommandInput
               placeholder="Type a country name or search..."
               accept="text/plain"
             />
-            <CommandList>
+            <CommandList className="text-center">
               <CommandEmpty>No countries found.</CommandEmpty>
 
               <ScrollArea className="h-72 w-100 rounded-md border">
@@ -80,8 +80,9 @@ const SearchBoxForCountries = ({
         </PopoverContent>
       </Popover>
       {country && (
-        <div className="text-sm">
-          Your Currency is
+        <div className="text-sm text-wrap">
+          <span className="md:inline hidden">Your Currency is</span>
+          <span className="md:hidden inline">Currency </span>
           <span className="font-bold ml-2">
             {currencies.find((c) => c.country === country)?.symbol}
           </span>

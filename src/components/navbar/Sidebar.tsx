@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { Logo, items } from "./Navbar";
@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
   const path = usePathname();
+  const [open, setOpen] = useState(false);
   return (
     <div>
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
           <Menu />
         </SheetTrigger>
@@ -24,6 +25,7 @@ const Sidebar = () => {
                 <div
                   key={item.label}
                   className={cn("p-2", isActive && "bg-secondary rounded-sm")}
+                  onClick={() => setOpen((p) => !p)}
                 >
                   <NavItems href={item.link} label={item.label} />
                 </div>

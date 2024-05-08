@@ -12,9 +12,7 @@ const CustomSkeloton = ({
     return children;
   }
   return (
-
     <Skeleton className="w-full">
-
       <div className="opacity-10">{children}</div>
     </Skeleton>
   );
