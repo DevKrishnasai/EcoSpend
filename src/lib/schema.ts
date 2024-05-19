@@ -1,3 +1,4 @@
+import { differenceInDays } from "date-fns";
 import { z } from "zod";
 
 export const userSettingsSchema = z.object({
@@ -44,6 +45,32 @@ export const categorySchema = z.object({
   }),
   type: z.enum(["Income", "Expense"]),
   icon: z.string(),
+});
+
+export const statsDateSchema = z
+  .object({
+    from: z.coerce.date(),
+    to: z.coerce.date(),
+  })
+
+  .refine(
+    (data) => {
+      const diff = differenceInDays(
+        new Date(data.to).toUTCString(),
+        new Date(data.from).toUTCString()
+      );
+
+      return diff <= 60;
+    },
+    {
+      message: "date range must be less than 60 days",
+    }
+  );
+
+export const periodHistorySchema = z.object({
+  year: z.coerce.number(),
+  month: z.coerce.number().max(11).min(0),
+  period: z.enum(["year", "month"]),
 });
 
 export const categoriesSchema = z.array(categorySchema);

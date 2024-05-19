@@ -8,8 +8,12 @@ import { z } from "zod";
 
 export type TNavItem = {
   label: string;
-  href: string;
+  link: string;
+  cls?: string;
+  icon: React.ReactNode;
 };
+
+export type TThemes = "light" | "dark" | "system";
 
 export type TUser = z.infer<typeof userSettingsSchema>;
 

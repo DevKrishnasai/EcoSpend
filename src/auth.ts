@@ -6,13 +6,8 @@ import prisma from "./db";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [github],
-  callbacks: {
-    async session({ session, token }) {
-      // Remove or set emailVerified to undefined
-      return session;
-    },
-    async signIn({ user }) {
-      return true;
-    },
+  callbacks: {},
+  pages: {
+    signOut: "/uro",
   },
 });

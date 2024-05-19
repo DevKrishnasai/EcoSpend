@@ -17,7 +17,7 @@ import { TTransaction, TType } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NewTransaction } from "../actions";
 import { toast } from "sonner";
 
@@ -29,6 +29,7 @@ const CreatTransation = ({
   type: TType;
 }) => {
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -56,8 +57,14 @@ const CreatTransation = ({
           id: "add-transaction",
         }
       );
+      console.log("@@@@data", data);
       reset();
       setOpen(false);
+
+      // revalidate the data
+      queryClient.invalidateQueries({
+        queryKey: ["stats"],
+      });
     },
     onError: (e) => {
       console.log(e);

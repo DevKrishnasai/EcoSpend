@@ -3,12 +3,23 @@ import { cn } from "@/lib/utils";
 import { TNavItem } from "@/utils/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import { SetStateAction, Dispatch } from "react";
 
-const NavItems = ({ label, href }: TNavItem) => {
+const NavItems = ({
+  label,
+  link,
+  cls,
+  icon,
+  setOpen = (value: SetStateAction<boolean>) => {},
+}: TNavItem & { setOpen?: Dispatch<SetStateAction<boolean>> }) => {
   const path = usePathname();
   return (
-    <Link href={href} className={cn(path === href && "font-bold")}>
+    <Link
+      href={link}
+      className={cn(cls, path === link && "font-bold bg-muted")}
+      onClick={() => setOpen(false)}
+    >
+      {icon}
       {label}
     </Link>
   );

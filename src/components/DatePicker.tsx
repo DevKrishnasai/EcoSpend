@@ -1,8 +1,6 @@
 "use client";
-
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -12,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { TTransaction } from "@/utils/types";
-import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue } from "react-hook-form";
 import { useState } from "react";
 
 export function DatePicker({
@@ -21,7 +19,7 @@ export function DatePicker({
   setValue: UseFormSetValue<TTransaction>;
 }) {
   const [open, setOpen] = useState<boolean>(false);
-  const [date, setDate] = useState<Date>(new Date(Date.now()));
+  const [date, setDate] = useState<Date>();
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -41,6 +39,7 @@ export function DatePicker({
           mode="single"
           selected={date}
           onSelect={(d) => {
+            console.log(d);
             setOpen((p) => !p);
             if (d) setDate(d);
             if (d) setValue("date", d);

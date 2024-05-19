@@ -8,41 +8,50 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { TCategory, TType } from "@/utils/types";
-
+import { TCategory, TTransaction, TType } from "@/utils/types";
 import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { Button } from "./ui/button";
 import { BoxSelectIcon, PlusSquare } from "lucide-react";
 import { Input } from "./ui/input";
-import { useForm } from "react-hook-form";
+import { UseFormClearErrors, UseFormSetValue, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "@/lib/schema";
-import EmojiPicker, { Theme } from "emoji-picker-react";
 import { useTheme } from "next-themes";
 import { UseThemeProps } from "next-themes/dist/types";
 import { useMutation, QueryClient } from "@tanstack/react-query";
-
 import { toast } from "sonner";
 import { NewCategory } from "@/app/dashboard/actions";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import CustomSkeloton from "./CustomSkeloton";
 
 const CategoryCreator = ({
   type,
-  refetch,
+  parentSet,
   parentOpen,
+  clearErrors,
+  refetch,
 }: {
   type: TType;
-  refetch: (a: string, b: string) => Promise<void>;
+  parentSet: UseFormSetValue<TTransaction>;
   parentOpen: Dispatch<SetStateAction<boolean>>;
+  clearErrors: UseFormClearErrors<TTransaction>;
+  refetch: () => void;
 }) => {
   const theme: UseThemeProps = useTheme();
   const [open, setOpen] = useState(false);
   const [dialog, setDialog] = useState(false);
-
   const queryClient = new QueryClient();
 
+  console.log("@@@@@theme", theme);
   const {
-    register,
     reset,
+    register,
     handleSubmit,
     getValues,
     setValue,
@@ -59,58 +68,47 @@ const CategoryCreator = ({
     mutationFn: NewCategory,
     onSuccess: async (success, data) => {
       toast.success(
-        `${type} category with ${data.icon} ${data.name}  created successfully `,
-        {
-          id: "add-category",
-        }
+        `${type} category with ${data.icon} ${data.name} created successfully`,
+        { id: "add-category" }
       );
 
-      //not working
-      await queryClient.invalidateQueries({
-        queryKey: ["fullCatagories"],
-        fetchStatus: "fetching",
-      });
+      refetch();
+      parentSet("category", data.name);
+      parentSet("categoryIcon", data.icon);
 
-      refetch(data.name, data.icon);
-      reset();
-      setDialog(false);
+      clearErrors();
+      parentOpen(false);
     },
     onError: (e) => {
-      console.log(e);
+      console.error(e);
       toast.error(
         `Failed to create ${type} category with ${getValues(
           "icon"
-        )} ${getValues("name")}}`,
-        {
-          id: "add-transaction",
-        }
+        )} ${getValues("name")}`,
+        { id: "add-category" }
       );
     },
   });
 
-  const createCategory = useCallback(
-    (data: TCategory) => {
-      toast.loading(`creating ${data.icon} ${data.name} category...`, {
-        id: "add-category",
-      });
-      addCategoryMutation.mutate(data);
-    },
-    [addCategoryMutation]
-  );
+  const createCategory = (data: TCategory) => {
+    toast.loading(`Creating ${data.icon} ${data.name} category...`, {
+      id: "add-category",
+    });
+    addCategoryMutation.mutate(data);
+  };
 
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
       <DialogTrigger asChild>
         <Button
-          variant={"ghost"}
-          className="flex border-separate items-center justify-start roudned-none border-b px-3 py-3 text-muted-foreground"
-          // onClick={() => parentOpen(false)}
+          variant="ghost"
+          className="flex items-center justify-start rounded-none border-b px-3 py-3 text-muted-foreground"
         >
           <PlusSquare className="mr-2 h-4 w-4" />
           Create new
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>
             Create
@@ -128,51 +126,57 @@ const CategoryCreator = ({
             Categories are used to group your transactions
           </DialogDescription>
         </DialogHeader>
-        <form className="space-y-5 " onClick={handleSubmit(createCategory)}>
-          <Input {...register("name")} placeholder="enter category name..." />
+        <form className="space-y-5" onSubmit={handleSubmit(createCategory)}>
+          <Input {...register("name")} placeholder="Enter category name..." />
           {errors.name && (
             <span className="text-red-700 text-xs">{errors.name.message}</span>
           )}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <div
+                className="flex h-[130px] w-full cursor-pointer flex-col items-center justify-center border-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-300"
+                onClick={() => setOpen(!open)}
+              >
+                {getValues("icon") ? (
+                  <div className="text-5xl">{getValues("icon")}</div>
+                ) : (
+                  <BoxSelectIcon />
+                )}
+                <p className="mt-1">
+                  {getValues("icon")
+                    ? "Click here to change icon"
+                    : "Click here to select an icon"}
+                </p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="absolute -top-80 -left-48 bg-transparent border-0">
+              <Picker
+                onEmojiSelect={(emoji: { native: string }) => {
+                  setValue("icon", emoji.native);
+                  setOpen(false);
+                }}
+                data={data}
+                theme={theme.theme === "dark" ? "dark" : "light"}
+                autofocus={true}
+              />
+            </PopoverContent>
+          </Popover>
 
-          <EmojiPicker
-            theme={theme.theme === "dark" ? Theme.DARK : Theme.LIGHT}
-            open={open}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-            onEmojiClick={(emoji) => {
-              setValue("icon", emoji.emoji);
-              setOpen(false);
-            }}
-          />
-          <div
-            className="h-[130px] w-full flex flex-col justify-center items-center border-2 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-300"
-            onClick={() => setOpen((o) => !o)}
-          >
-            {getValues("icon") ? (
-              <div className="text-5xl">{getValues("icon")}</div>
-            ) : (
-              <BoxSelectIcon />
-            )}
-            <p className="mt-1">
-              {getValues("icon")
-                ? "click here to change icon"
-                : "click here to select a icon"}
-            </p>
-          </div>
+          {errors.icon && (
+            <span className="text-red-700 text-xs">{errors.icon.message}</span>
+          )}
 
           <Button
             className={cn(
               type === "Income" ? "bg-green-800" : "bg-red-800",
-              "w-full "
+              "w-full",
+              isSubmitting && "cursor-not-allowed"
             )}
-            variant={"outline"}
-            onClick={() => handleSubmit(createCategory)}
+            variant="outline"
+            type="submit"
+            disabled={isSubmitting}
           >
-            create
+            {isSubmitting ? "Creating..." : "Create"}
           </Button>
         </form>
       </DialogContent>
