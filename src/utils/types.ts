@@ -1,6 +1,7 @@
 import {
   categoriesSchema,
   categorySchema,
+  statsDateSchema,
   transactionSchema,
   userSettingsSchema,
 } from "@/lib/schema";
@@ -24,3 +25,5 @@ export type TTransaction = z.infer<typeof transactionSchema>;
 export type TCategory = z.infer<typeof categorySchema>;
 
 export type TCategories = z.infer<typeof categoriesSchema>;
+
+export type TRangePicker = z.infer<typeof statsDateSchema>;

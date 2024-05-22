@@ -60,10 +60,10 @@ export const statsDateSchema = z
         new Date(data.from).toUTCString()
       );
 
-      return diff <= 60;
+      return diff <= 120;
     },
     {
-      message: "date range must be less than 60 days",
+      message: "date range must be less than 120 days",
     }
   );
 

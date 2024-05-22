@@ -14,7 +14,7 @@ const OverviewSection = ({
   date: DateRange;
   random: number;
 }) => {
-  const { data, isFetching, refetch } = useQuery<TStats>({
+  const { data, isFetching } = useQuery<TStats>({
     queryKey: ["cards-stats", date.from, date.to, random, random],
     queryFn: () =>
       fetch(`/api/stats/balance?from=${date.from}&to=${date.to}`).then((res) =>

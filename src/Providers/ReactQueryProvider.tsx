@@ -8,11 +8,11 @@ const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools
+      {/* <ReactQueryDevtools
         initialIsOpen={false}
         position="top"
         buttonPosition="top-left"
-      />
+      /> */}
     </QueryClientProvider>
   );
 };

@@ -4,8 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
 import CategoryStats from "./CategoryStats";
 
-import { useEffect } from "react";
-
 const OverCategoriesSection = ({
   date,
   random,
@@ -24,12 +22,10 @@ const OverCategoriesSection = ({
   const data = rawData || { stats: [] };
 
   return (
-    // data?.stats?.length > 0 && (
-    <div className="w-full flex gap-2 min-h-[200px]">
+    <div className="w-full flex gap-2 min-h-[200px] mb-5">
       <CategoryStats type="Income" data={data || { stats: [] }} />
       <CategoryStats type="Expense" data={data || { stats: [] }} />
     </div>
-    // )
   );
 };
 

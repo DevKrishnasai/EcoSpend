@@ -37,6 +37,7 @@ const CreatTransation = ({
     setValue,
     getValues,
     reset,
+    clearErrors,
     setError,
     formState: { isSubmitting, errors },
   } = useForm<TTransaction>({
@@ -57,7 +58,6 @@ const CreatTransation = ({
           id: "add-transaction",
         }
       );
-      console.log("@@@@data", data);
       reset();
       setOpen(false);
 
@@ -140,6 +140,7 @@ const CreatTransation = ({
                 getValues={getValues}
                 setError={setError}
                 reset={reset}
+                clearErrors={clearErrors}
               />
               {errors.category && (
                 <p className="text-red-700 text-xs">

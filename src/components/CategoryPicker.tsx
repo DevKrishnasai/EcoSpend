@@ -36,7 +36,6 @@ export function CategoryPicker({
   setValue,
   getValues,
   setError,
-  reset,
   clearErrors,
 }: {
   type: TType;
@@ -88,6 +87,9 @@ export function CategoryPicker({
 
         <PopoverContent className="w-[200px] p-0">
           <Command onSubmit={(e) => e.preventDefault()}>
+            <CommandInput placeholder="Search category..." />
+            {/* <Button variant={"outline"}>+ add new</Button> */}
+
             <CategoryCreator
               parentOpen={setOpen}
               type={type}
@@ -95,9 +97,6 @@ export function CategoryPicker({
               clearErrors={clearErrors}
               refetch={refetch}
             />
-            <CommandInput placeholder="Search category..." />
-            {/* <Button variant={"outline"}>+ add new</Button> */}
-
             <CommandList className="text-center">
               <CommandEmpty className="flex justify-center items-center flex-col h-[80px]">
                 <div className="text-sm">No category found.</div>
@@ -119,6 +118,7 @@ export function CategoryPicker({
                         setValue("categoryIcon", category.icon);
                       }
                     }}
+                    className="text-sm text-wrap"
                   >
                     {category.icon} {category.name}
                     <Check

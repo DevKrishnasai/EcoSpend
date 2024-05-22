@@ -1,5 +1,4 @@
 import { TCategoryStats } from "@/app/api/stats/categories/route";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import React from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
@@ -18,15 +17,10 @@ const CategoryStats = ({
     <div
       className={cn(
         "flex-1 border flex flex-col items-center gap-2 p-2 rounded-md",
-        filteredData.length === 0 && "justify-center items-center",
-        "hover:border-2 hover:border-white transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:scale-105"
+        filteredData.length === 0 && "justify-center items-center"
+        // "hover:border-2 hover:border-white transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:scale-105"
       )}
     >
-      {filteredData.length > 0 && (
-        <p className=" font-medium bg-black text-white dark:bg-white dark:text-black border rounded-2xl p-2">
-          {type}
-        </p>
-      )}
       {filteredData.length === 0 && (
         <div className="flex flex-col justify-center items-center">
           <p className="font-bold">No data found</p>
@@ -39,10 +33,10 @@ const CategoryStats = ({
         return (
           <div key={d.category} className=" w-full">
             <div className="w-full flex justify-between px-2 mb-3">
-              <span className="font-semibold">
+              <span className="text-sm md:text-base font-semibold overflow-hidden">
                 {d.categoryIcon} {d.category}
               </span>
-              <span className="font-bold">
+              <span className="text-sm md:text-base font-bold overflow-hidden">
                 {data.currency}
                 {d.amount}
               </span>
@@ -56,7 +50,7 @@ const CategoryStats = ({
               // className={cn("h-[8px] lg-h-[10px]")}
               transitionDuration="2s"
               height="10px"
-              className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out cursor-not-allowed"
+              // className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out cursor-not-allowed"
             />
           </div>
         );

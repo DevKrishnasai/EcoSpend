@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
 import HistroySelector from "./HistroySelector";
 import { THistory } from "@/app/api/historys/data/route";
 import { useQuery } from "@tanstack/react-query";
@@ -41,8 +41,6 @@ const OverChartsSection = ({
       ).then((res) => res.json()),
   });
 
-  console.log("@@@@@@data3", data);
-
   return (
     <>
       <HistroySelector
@@ -52,8 +50,18 @@ const OverChartsSection = ({
         setTimePeriod={setTimePeriod}
         random={random}
       />
-      <div className=" h-[300px] rounded-md shadow-md flex justify-center items-center">
-        {data && data.length === 0 && <p>No data</p>}
+      <div
+        className={cn(
+          " h-[300px] rounded-md shadow-md flex justify-center items-center ",
+          data && data.length === 0 && "border"
+        )}
+      >
+        {data && data.length === 0 && (
+          <div className="flex flex-col justify-center items-center">
+            <p className="font-bold text-base">No data found</p>
+            <span className="text-sm">try selecting other {period}</span>
+          </div>
+        )}
         {data && data.length > 0 && (
           <Chart data={data || []} period={period} currency={currency} />
         )}
@@ -74,7 +82,7 @@ const Chart = ({
   currency: string;
 }) => {
   return (
-    <ResponsiveContainer width={"100%"} height={300} debounce={100}>
+    <ResponsiveContainer width={"100%"} height={300}>
       <BarChart height={300} data={data} barCategoryGap={10} barSize={30}>
         <defs>
           <linearGradient id="incomeBar" x1="0" y1="0" x2="0" y2="1">
@@ -97,13 +105,12 @@ const Chart = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          padding={{ left: 5, right: 5 }}
           dataKey={(data) => {
             const { year, month, day } = data;
             const date = new Date(year, month, day || 1);
             if (period === "year") {
               return date.toLocaleDateString("default", {
-                month: "long",
+                month: "short",
               });
             }
             return date.toLocaleDateString("default", {
@@ -112,6 +119,7 @@ const Chart = ({
           }}
         />
         <YAxis
+          width={30}
           stroke="#888888"
           fontSize={12}
           tickLine={false}
@@ -149,7 +157,7 @@ function CustomTooltip({ active, payload, currency }: any) {
   const { expense, income } = data;
 
   return (
-    <div className="min-w-[300px] rounded border bg-background p-4">
+    <div className="w-[170px] max-w-[300px] rounded-3xl border bg-background p-4">
       <TooltipRow
         label="Expense"
         value={expense}

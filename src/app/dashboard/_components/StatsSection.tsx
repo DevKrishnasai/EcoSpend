@@ -23,8 +23,8 @@ const StatsSection = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col justify-center items-center gap-2 md:flex-row md:justify-between">
-        <p className="text-2xl md:text-3xl font-bold">overview </p>
+      <div className="flex flex-col justify-center items-center gap-2 md:flex-row lg:justify-end -mb-4">
+        {/* <p className="text-2xl md:text-3xl font-bold">overview </p> */}
         <DateRangePicker
           onUpdate={(values) => {
             if (!values.range.from || !values.range.to) return;

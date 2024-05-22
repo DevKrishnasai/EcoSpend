@@ -104,7 +104,7 @@ const Navbar = async ({ children }: { children: ReactNode }) => {
           <NavbarPart user={session?.user} />
         </header>
         <ScrollArea>
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6  ">
+          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6  w-screen lg:w-full">
             {children}
           </main>
         </ScrollArea>

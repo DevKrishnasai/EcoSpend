@@ -88,7 +88,7 @@ const PRESETS: Preset[] = [
 ];
 
 /** The DateRangePicker component allows a user to select a range of dates */
-export const DateRangePicker: FC<DateRangePickerProps> & {
+export const DateRangePicker: FC<DateRangePickerProps & { full?: boolean }> & {
   filePath: string;
 } = ({
   initialDateFrom = new Date(new Date().setHours(0, 0, 0, 0)),
@@ -99,6 +99,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
   align = "end",
   locale = "en-US",
   showCompare = true,
+  full = true,
 }): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -345,7 +346,7 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
       }}
     >
       <PopoverTrigger asChild>
-        <Button size={"lg"} variant="outline" className="w-fit">
+        <Button size={"default"} variant="outline" className={"w-fit"}>
           <div className="text-right">
             <div className="py-1">
               <div>{`${formatDate(range.from, locale)}${
@@ -363,13 +364,15 @@ export const DateRangePicker: FC<DateRangePickerProps> & {
               </div>
             )}
           </div>
-          <div className="pl-1 opacity-60 -mr-2 scale-125">
-            {isOpen ? (
-              <ChevronUpIcon width={24} />
-            ) : (
-              <ChevronDownIcon width={24} />
-            )}
-          </div>
+          {full && (
+            <div className="pl-1 opacity-60 -mr-2 scale-125">
+              {isOpen ? (
+                <ChevronUpIcon width={24} />
+              ) : (
+                <ChevronDownIcon width={24} />
+              )}
+            </div>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className="w-fit">

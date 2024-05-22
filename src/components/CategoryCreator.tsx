@@ -28,7 +28,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import CustomSkeloton from "./CustomSkeloton";
 
 const CategoryCreator = ({
   type,
@@ -36,21 +35,22 @@ const CategoryCreator = ({
   parentOpen,
   clearErrors,
   refetch,
+  trigger,
+  setRandom,
 }: {
   type: TType;
-  parentSet: UseFormSetValue<TTransaction>;
-  parentOpen: Dispatch<SetStateAction<boolean>>;
-  clearErrors: UseFormClearErrors<TTransaction>;
-  refetch: () => void;
+  parentSet?: UseFormSetValue<TTransaction>;
+  parentOpen?: Dispatch<SetStateAction<boolean>>;
+  clearErrors?: UseFormClearErrors<TTransaction>;
+  trigger?: React.ReactNode;
+  refetch?: () => void;
+  setRandom?: Dispatch<SetStateAction<number>>;
 }) => {
   const theme: UseThemeProps = useTheme();
   const [open, setOpen] = useState(false);
   const [dialog, setDialog] = useState(false);
-  const queryClient = new QueryClient();
 
-  console.log("@@@@@theme", theme);
   const {
-    reset,
     register,
     handleSubmit,
     getValues,
@@ -72,12 +72,17 @@ const CategoryCreator = ({
         { id: "add-category" }
       );
 
-      refetch();
-      parentSet("category", data.name);
-      parentSet("categoryIcon", data.icon);
+      if (refetch && parentSet && parentOpen && clearErrors) {
+        refetch();
+        parentSet("category", data.name);
+        parentSet("categoryIcon", data.icon);
 
-      clearErrors();
-      parentOpen(false);
+        clearErrors();
+        parentOpen(false);
+      } else {
+        if (setRandom) setRandom(Math.random());
+      }
+      setDialog(false);
     },
     onError: (e) => {
       console.error(e);
@@ -100,15 +105,17 @@ const CategoryCreator = ({
   return (
     <Dialog open={dialog} onOpenChange={setDialog}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex items-center justify-start rounded-none border-b px-3 py-3 text-muted-foreground"
-        >
-          <PlusSquare className="mr-2 h-4 w-4" />
-          Create new
-        </Button>
+        {trigger || (
+          <Button
+            variant="ghost"
+            className="flex items-center justify-start rounded-none border-b px-3 py-3 text-muted-foreground"
+          >
+            <PlusSquare className="mr-2 h-4 w-4" />
+            Create new
+          </Button>
+        )}
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className="m-2">
         <DialogHeader>
           <DialogTitle>
             Create
