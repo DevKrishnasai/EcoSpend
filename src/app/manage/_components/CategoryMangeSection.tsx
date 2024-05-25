@@ -14,8 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CategoryCreator from "@/components/CategoryCreator";
-import { deleteCategory } from "../actions";
 import { toast } from "sonner";
+import { deleteCategory } from "../actions";
 
 const CategoryMangeSection = () => {
   const [random, setRandom] = useState(Math.random());
@@ -65,66 +65,87 @@ const CategoryMangeSection = () => {
     mutate(category);
   };
   return (
-    <CustomSkeloton isLoading={isFetching} full>
-      <Card className="">
-        <CardHeader>
-          <CardTitle>Add/Remove Categories</CardTitle>
-          <CardDescription>
-            Simple way to add and remove categories to your trasactions
-            <p className="text-xs">
-              Note: This will not affect your previous transactions
-            </p>
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="w-full flex flex-col justify-center ">
-          <div className="flex justify-between items-center mb-2">
-            <h1 className="font-bold text-lg">Income Categories</h1>
+    <Card className="">
+      <CardHeader>
+        <CardTitle>Add/Remove Categories</CardTitle>
+        <CardDescription>
+          Simple way to add and remove categories to your trasactions
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="w-full flex flex-col justify-center ">
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="font-bold text-lg">Income Categories</h1>
 
-            <CategoryCreator
-              type="Income"
-              trigger={
-                <Button variant={"outline"} className="bg-green-800">
-                  Add Income Category
-                </Button>
-              }
-              setRandom={setRandom}
-            />
+          <CategoryCreator
+            type="Income"
+            trigger={
+              <Button variant={"outline"} className="bg-green-800 text-white ">
+                Add Income Category
+              </Button>
+            }
+            setRandom={setRandom}
+          />
+        </div>
+        {incomeCategories?.length === 0 && !isFetching && (
+          <div className="h-[120px] w-full shadow-sm border rounded-lg flex flex-col justify-center items-center">
+            <p>No Income Categories</p>
           </div>
-          {incomeCategories?.length === 0 && (
-            <div className="h-[120px] w-full shadow-sm border rounded-lg flex flex-col justify-center items-center">
-              <p>No Income Categories</p>
-            </div>
+        )}
+        <section className="grid grid-cols-2 lg:grid-cols-5   gap-2">
+          {isFetching &&
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              <CustomSkeloton key={i} isLoading={isFetching} full={false}>
+                <div
+                  key={i}
+                  className=" h-[120px]  shadow-sm border rounded-lg flex flex-col"
+                ></div>
+              </CustomSkeloton>
+            ))}
+          {incomeCategories?.map((category) =>
+            categorySection({
+              category,
+              deleteCategoryHandler,
+              loading: isFetching,
+            })
           )}
-          <section className="grid grid-cols-2 lg:grid-cols-5   gap-2">
-            {incomeCategories?.map((category) =>
-              categorySection({ category, deleteCategoryHandler })
-            )}
-          </section>
-          <div className="flex justify-between items-center mb-2 mt-3">
-            <h1 className="font-bold text-lg">Expense Categories</h1>
-            <CategoryCreator
-              type="Expense"
-              trigger={
-                <Button variant={"outline"} className="bg-red-800 ">
-                  Add Income Category
-                </Button>
-              }
-              setRandom={setRandom}
-            />
+        </section>
+        <div className="flex justify-between items-center mb-2 mt-3">
+          <h1 className="font-bold text-lg">Expense Categories</h1>
+          <CategoryCreator
+            type="Expense"
+            trigger={
+              <Button variant={"outline"} className="bg-red-800 text-white ">
+                Add Income Category
+              </Button>
+            }
+            setRandom={setRandom}
+          />
+        </div>
+        {expenseCategories?.length === 0 && !isFetching && (
+          <div className="h-[120px] w-full shadow-sm border rounded-lg flex flex-col justify-center items-center">
+            <p>No Expense Categories</p>
           </div>
-          {expenseCategories?.length === 0 && (
-            <div className="h-[120px] w-full shadow-sm border rounded-lg flex flex-col justify-center items-center">
-              <p>No Expense Categories</p>
-            </div>
+        )}
+        <section className="grid grid-cols-2 lg:grid-cols-5 gap-2 ">
+          {isFetching &&
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              <CustomSkeloton key={i} isLoading={isFetching} full={false}>
+                <div
+                  key={i}
+                  className=" h-[120px]  shadow-sm border rounded-lg flex flex-col"
+                ></div>
+              </CustomSkeloton>
+            ))}
+          {expenseCategories?.map((category) =>
+            categorySection({
+              category,
+              deleteCategoryHandler,
+              loading: isFetching,
+            })
           )}
-          <section className="grid grid-cols-2 lg:grid-cols-5 gap-2 ">
-            {expenseCategories?.map((category) =>
-              categorySection({ category, deleteCategoryHandler })
-            )}
-          </section>
-        </CardContent>
-      </Card>
-    </CustomSkeloton>
+        </section>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -133,6 +154,7 @@ export default CategoryMangeSection;
 const categorySection = ({
   category,
   deleteCategoryHandler,
+  loading,
 }: {
   category: {
     name: string;
@@ -148,23 +170,26 @@ const categorySection = ({
       icon: string;
     };
   }) => void;
+  loading: boolean;
 }) => {
   return (
-    <div
-      key={category.icon + category.name}
-      className=" h-[120px]  shadow-sm border rounded-lg flex flex-col"
-    >
-      <div className="flex flex-col justify-center items-center h-full gap-1 overflow-hidden">
-        <p>{category.icon}</p>
-        <p className="text-wrap">{category.name}</p>
-      </div>
-      <Button
-        variant={"destructive"}
-        className="w-full justify-items-end border-r-0 bg-transparent border mt-auto"
-        onClick={() => deleteCategoryHandler({ category })}
+    <CustomSkeloton isLoading={loading} full={false} opacity={0}>
+      <div
+        key={category.icon + category.name}
+        className=" h-[120px]  shadow-sm border rounded-lg flex flex-col"
       >
-        <Trash className={cn("w-full text-black/50 dark:text-white/80")} />
-      </Button>
-    </div>
+        <div className="flex flex-col justify-center items-center h-full gap-1 overflow-hidden">
+          <p>{category.icon}</p>
+          <p className="text-wrap">{category.name}</p>
+        </div>
+        <Button
+          variant={"destructive"}
+          className="w-full justify-items-end border-r-0 bg-transparent border mt-auto"
+          onClick={() => deleteCategoryHandler({ category })}
+        >
+          <Trash className={cn("w-full text-black/50 dark:text-white/80")} />
+        </Button>
+      </div>
+    </CustomSkeloton>
   );
 };

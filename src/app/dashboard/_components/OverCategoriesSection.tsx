@@ -1,8 +1,10 @@
 "use client";
+
 import { TCategoryStats } from "@/app/api/stats/categories/route";
 import { useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
 import CategoryStats from "./CategoryStats";
+import CustomSkeloton from "@/components/CustomSkeloton";
 
 const OverCategoriesSection = ({
   date,
@@ -11,7 +13,7 @@ const OverCategoriesSection = ({
   date: DateRange;
   random: number;
 }) => {
-  const { data: rawData } = useQuery<TCategoryStats>({
+  const { data: rawData, isFetching } = useQuery<TCategoryStats>({
     queryKey: ["category-stats", date.from, date.to, random, random],
     queryFn: () =>
       fetch(`/api/stats/categories?from=${date.from}&to=${date.to}`).then(
@@ -23,8 +25,12 @@ const OverCategoriesSection = ({
 
   return (
     <div className="w-full flex gap-2 min-h-[200px] mb-5">
-      <CategoryStats type="Income" data={data || { stats: [] }} />
-      <CategoryStats type="Expense" data={data || { stats: [] }} />
+      <CustomSkeloton isLoading={isFetching} full={true}>
+        <CategoryStats type="Income" data={data || { stats: [] }} />
+      </CustomSkeloton>
+      <CustomSkeloton isLoading={isFetching} full={true}>
+        <CategoryStats type="Expense" data={data || { stats: [] }} />
+      </CustomSkeloton>
     </div>
   );
 };

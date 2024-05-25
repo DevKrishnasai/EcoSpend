@@ -6,11 +6,13 @@ import { redirect } from "next/navigation";
 export const Logout = async () => {
   await signOut({
     redirectTo: "/",
+    redirect: true,
   });
 };
 
 export const Login = async () => {
   await signIn("github", {
+    redirect: true,
     callbackUrl: "/dashboard",
   });
 };

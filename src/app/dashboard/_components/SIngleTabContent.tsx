@@ -10,8 +10,8 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { NewTransaction } from "../actions";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const SIngleTabContent = ({
   type,

@@ -1,10 +1,19 @@
 "use client";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useEffect, Dispatch, SetStateAction, useState } from "react";
 import { PiggyBank } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SIngleTabContent from "./SIngleTabContent";
 import { TType } from "@/utils/types";
 import { cn } from "@/lib/utils";
+
+const toggleBodyOverflow = (shouldHide: any) => {
+  window.scrollTo(0, 0);
+  if (shouldHide) {
+    document.body.classList.add("overflow-hidden");
+  } else {
+    document.body.classList.remove("overflow-hidden");
+  }
+};
 
 const AddTransaction = ({
   random,
@@ -15,14 +24,19 @@ const AddTransaction = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    toggleBodyOverflow(open);
+    return () => toggleBodyOverflow(false);
+  }, [open]);
+
   return (
-    <div className="">
-      <div className="absolute bottom-5 right-5 ">
-        <div className="flex gap-5 justify-center items-center  md:justify-end w-full h-full">
+    <>
+      <div className="fixed bottom-5 right-5 ">
+        <div className="flex gap-5 justify-center items-center md:justify-end w-full h-full">
           {!open && (
             <PiggyBank
               size={50}
-              className="border-2 border-black rounded-full  text-black  dark:text-white dark:border-white text-3xl p-2 cursor-pointer  "
+              className="border-2 border-black rounded-full text-black dark:text-white dark:border-white text-3xl p-2 cursor-pointer"
               onClick={() => setOpen(true)}
             />
           )}
@@ -31,7 +45,8 @@ const AddTransaction = ({
       <div
         className={cn(
           "bg-red absolute top-0 left-0 w-full h-full -z-10",
-          open && "z-5 bg-opacity-50 backdrop-filter backdrop-blur-lg"
+          open &&
+            "z-5 bg-opacity-50 backdrop-filter backdrop-blur-lg transition-all duration-300 ease-in-out"
         )}
       ></div>
       {open && (
@@ -42,7 +57,7 @@ const AddTransaction = ({
           setRandom={setRandom}
         />
       )}
-    </div>
+    </>
   );
 };
 
@@ -72,10 +87,18 @@ const TabsForTransaction = ({
           type === "Expense" ? "bg-red-800" : "bg-green-800"
         )}
       >
-        <TabsTrigger value="Expense" onClick={() => setType("Expense")}>
+        <TabsTrigger
+          value="Expense"
+          onClick={() => setType("Expense")}
+          className="transition-all duration-300 ease-in-out"
+        >
           Expense
         </TabsTrigger>
-        <TabsTrigger value="Income" onClick={() => setType("Income")}>
+        <TabsTrigger
+          value="Income"
+          onClick={() => setType("Income")}
+          className="transition-all duration-300 ease-in-out"
+        >
           Income
         </TabsTrigger>
       </TabsList>

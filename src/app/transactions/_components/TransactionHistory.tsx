@@ -13,6 +13,7 @@ const TransactionHistory = () => {
     to: new Date(Date.now()),
   });
   const [random, setRandom] = useState(Math.random());
+
   const { isFetching, data: transactions } = useQuery<TRangedTransactions>({
     queryKey: ["transactions", date.from, date.to, random],
     queryFn: () =>
@@ -25,6 +26,7 @@ const TransactionHistory = () => {
     queryKey: ["user"],
     queryFn: () => fetch("/api/user-details").then((res) => res.json()),
   });
+
   return (
     <div className="w-full ">
       <div className="flex justify-center lg:justify-end items-center ">

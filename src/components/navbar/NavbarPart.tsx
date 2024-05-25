@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { User } from "next-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Logout, Redirect } from "@/lib/action";
@@ -17,15 +17,6 @@ const NavbarPart = ({ user }: { user: User | undefined }) => {
   const path = usePathname();
   return (
     <>
-      <p className="text-lg font-bold ">
-        {path.includes("dashboard")
-          ? "Dashboard"
-          : path.includes("transactions")
-          ? "Transactions"
-          : path.includes("manage")
-          ? "Manage"
-          : "Dashboard"}
-      </p>
       <div className="flex gap-2 lg:g-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

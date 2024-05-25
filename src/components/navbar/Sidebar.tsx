@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-import { Logo, items } from "./Navbar";
+import { Menu, PiggyBankIcon } from "lucide-react";
 import NavItems from "./NavItems";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const Sidebar = () => {
   const path = usePathname();
@@ -16,7 +16,12 @@ const Sidebar = () => {
         <Menu />
       </SheetTrigger>
       <SheetContent side="left">
-        <Logo />
+        <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+          <Link href="/" className="flex items-center gap-2 font-semibold">
+            <PiggyBankIcon className="h-6 w-6" />
+            <span className="">EcoSpend</span>
+          </Link>
+        </div>
         <div className="flex flex-col gap-3 mt-4">
           {items.map((item) => {
             const isActive = path === item.link;
@@ -26,7 +31,11 @@ const Sidebar = () => {
                 className={cn("p-2", isActive && "bg-secondary rounded-sm")}
                 onClick={() => setOpen((p) => !p)}
               >
-                <NavItems href={item.link} label={item.label} />
+                <NavItems
+                  icon={item.icon}
+                  link={item.link}
+                  label={item.label}
+                />
               </div>
             );
           })}

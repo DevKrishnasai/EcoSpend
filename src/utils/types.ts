@@ -14,7 +14,7 @@ export type TNavItem = {
   icon: React.ReactNode;
 };
 
-export type TThemes = "light" | "dark" | "system";
+export type TThemes = "light" | "dark";
 
 export type TUser = z.infer<typeof userSettingsSchema>;
 

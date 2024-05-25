@@ -18,7 +18,6 @@ export async function GET(req: Request) {
   if (!safeData.success) {
     Response.json(safeData.error, { status: 400 });
   }
-  console.log("@@@@@@@@!!!!!!!!!!!!!", safeData.data);
 
   const data = await RangedTransactions(
     safeData.data || { from: new Date(), to: new Date() }

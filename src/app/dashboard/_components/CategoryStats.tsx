@@ -1,6 +1,6 @@
+"use client";
 import { TCategoryStats } from "@/app/api/stats/categories/route";
 import { cn } from "@/lib/utils";
-import React from "react";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 const CategoryStats = ({
@@ -16,9 +16,8 @@ const CategoryStats = ({
   return (
     <div
       className={cn(
-        "flex-1 border flex flex-col items-center gap-2 p-2 rounded-md",
+        "flex-1 border flex flex-col items-center gap-2 p-2 rounded-md shadow-sm",
         filteredData.length === 0 && "justify-center items-center"
-        // "hover:border-2 hover:border-white transition-all duration-300 ease-in-out cursor-pointer hover:shadow-lg hover:scale-105"
       )}
     >
       {filteredData.length === 0 && (
@@ -46,7 +45,7 @@ const CategoryStats = ({
               completed={percentage}
               isLabelVisible={false}
               animateOnRender
-              bgColor={type === "Income" ? "green" : "red"}
+              bgColor={type === "Income" ? "#116111" : "#b00b0b"}
               // className={cn("h-[8px] lg-h-[10px]")}
               transitionDuration="2s"
               height="10px"

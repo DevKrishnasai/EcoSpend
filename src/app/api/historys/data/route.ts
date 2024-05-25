@@ -47,7 +47,6 @@ const historyData = async ({
   month: number;
   userId: string;
 }) => {
-  console.log("period----------- ", period);
   switch (period) {
     case "year":
       return await YearHistory(userId, year);

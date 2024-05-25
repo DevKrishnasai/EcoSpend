@@ -1,14 +1,64 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "emailVerified" TIMESTAMP(3),
+    "country" TEXT NOT NULL DEFAULT 'India',
+    "currency" TEXT NOT NULL DEFAULT '₹',
     "image" TEXT,
+    "emailVerified" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Category" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "icon" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'Income'
+);
+
+-- CreateTable
+CREATE TABLE "Transaction" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "description" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL DEFAULT 'Income',
+    "category" TEXT NOT NULL,
+    "categoryIcon" TEXT NOT NULL,
+
+    CONSTRAINT "Transaction_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MonthHistory" (
+    "userId" TEXT NOT NULL,
+    "day" INTEGER NOT NULL,
+    "month" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL,
+    "income" DOUBLE PRECISION NOT NULL,
+    "expense" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "MonthHistory_pkey" PRIMARY KEY ("day","month","year","userId")
+);
+
+-- CreateTable
+CREATE TABLE "YearHistory" (
+    "userId" TEXT NOT NULL,
+    "month" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL,
+    "income" DOUBLE PRECISION NOT NULL,
+    "expense" DOUBLE PRECISION NOT NULL,
+
+    CONSTRAINT "YearHistory_pkey" PRIMARY KEY ("month","year","userId")
 );
 
 -- CreateTable
@@ -48,35 +98,17 @@ CREATE TABLE "VerificationToken" (
     CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("identifier","token")
 );
 
--- CreateTable
-CREATE TABLE "Authenticator" (
-    "id" TEXT NOT NULL,
-    "credentialID" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "providerAccountId" TEXT NOT NULL,
-    "credentialPublicKey" TEXT NOT NULL,
-    "counter" INTEGER NOT NULL,
-    "credentialDeviceType" TEXT NOT NULL,
-    "credentialBackedUp" BOOLEAN NOT NULL,
-    "transports" TEXT,
-
-    CONSTRAINT "Authenticator_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+CREATE UNIQUE INDEX "Category_name_userId_type_key" ON "Category"("name", "userId", "type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Authenticator_credentialID_key" ON "Authenticator"("credentialID");
+CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Authenticator" ADD CONSTRAINT "Authenticator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

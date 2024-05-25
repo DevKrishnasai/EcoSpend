@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, use, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import HistroySelector from "./HistroySelector";
 import { THistory } from "@/app/api/historys/data/route";
 import { useQuery } from "@tanstack/react-query";

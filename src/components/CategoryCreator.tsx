@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { TCategory, TTransaction, TType } from "@/utils/types";
-import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Button } from "./ui/button";
 import { BoxSelectIcon, PlusSquare } from "lucide-react";
 import { Input } from "./ui/input";
@@ -18,9 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "@/lib/schema";
 import { useTheme } from "next-themes";
 import { UseThemeProps } from "next-themes/dist/types";
-import { useMutation, QueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { NewCategory } from "@/app/dashboard/actions";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import {
@@ -28,6 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { NewCategory } from "@/app/dashboard/actions";
 
 const CategoryCreator = ({
   type,

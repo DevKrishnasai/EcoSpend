@@ -39,7 +39,6 @@ export function DatePicker({
           mode="single"
           selected={date}
           onSelect={(d) => {
-            console.log(d);
             setOpen((p) => !p);
             if (d) setDate(d);
             if (d) setValue("date", d);

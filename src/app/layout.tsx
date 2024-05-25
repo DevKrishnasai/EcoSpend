@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/Providers/ThemeProvider";
-import Navbar from "@/components/navbar/Navbar";
 import ReactQueryProvider from "@/Providers/ReactQueryProvider";
 import { Toaster } from "sonner";
+import Navbar from "@/components/navbar/Navbar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,14 +19,23 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            disableTransitionOnChange
-            defaultTheme="system"
-            enableSystem
-          >
-            <Navbar>{children}</Navbar>
-            <Toaster richColors position="bottom-right" theme="dark" />
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <Navbar />
+            {children}
+            <Toaster
+              richColors
+              position="bottom-right"
+              theme="dark"
+              toastOptions={{
+                duration: 2000,
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                  borderRadius: "10px",
+                  boxShadow: "0px 0px 10px #00000033",
+                },
+              }}
+            />
           </ThemeProvider>
         </ReactQueryProvider>
       </body>

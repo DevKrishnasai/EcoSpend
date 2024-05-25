@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -20,6 +20,7 @@ import { updateUserDetailsAction } from "../actions";
 import { toast } from "sonner";
 import SearchBoxForCountries from "./SearchBoxForCountries";
 import { TUser } from "@/utils/types";
+import { currencies } from "@/utils/constants";
 
 const BasicDeatilsSection = () => {
   //hookform
@@ -30,6 +31,7 @@ const BasicDeatilsSection = () => {
     reset,
     setValue,
     getValues,
+    watch,
   } = useForm<TUser>({
     resolver: zodResolver(userSettingsSchema),
   });
@@ -82,19 +84,16 @@ const BasicDeatilsSection = () => {
   );
 
   return (
-    <CustomSkeloton isLoading={isFetching}>
-      <Card className="">
-        <CardHeader>
-          <CardTitle>Basic Details</CardTitle>
-          <CardDescription>
-            Update your details to reflect in the whole application
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            className="space-y-6"
-            onSubmit={handleSubmit(updateUserDetails)}
-          >
+    <Card className="">
+      <CardHeader>
+        <CardTitle>Basic Details</CardTitle>
+        <CardDescription>
+          Update your details to reflect in the whole application
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form className="space-y-6" onSubmit={handleSubmit(updateUserDetails)}>
+          <CustomSkeloton isLoading={isFetching}>
             <Input
               {...register("name", {
                 required: true,
@@ -102,26 +101,28 @@ const BasicDeatilsSection = () => {
               placeholder="Name"
               className={errors.name ? "error border" : ""}
             />
-            {errors.name && (
-              <span className="text-red-500 text-xs">
-                {errors.name.message}
-              </span>
-            )}
+          </CustomSkeloton>
+          {errors.name && (
+            <span className="text-red-500 text-xs">{errors.name.message}</span>
+          )}
+          <CustomSkeloton isLoading={isFetching}>
             <Input {...register("email")} placeholder="Email" disabled={true} />
-
+          </CustomSkeloton>
+          <CustomSkeloton isLoading={isFetching}>
             <SearchBoxForCountries
               register={register}
               setValue={setValue}
               value={getValues("country")}
             />
-            {errors.country && (
-              <span className="text-red-500 text-xs">
-                {errors.country.message}
-              </span>
-            )}
-          </form>
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
+          </CustomSkeloton>
+
+          {errors.country && (
+            <span className="text-red-500 text-xs">
+              {errors.country.message}
+            </span>
+          )}
+        </form>
+        <div className="w-full flex justify-end items-center mt-3">
           <Button
             type="submit"
             onClick={handleSubmit(updateUserDetails)}
@@ -129,9 +130,9 @@ const BasicDeatilsSection = () => {
           >
             {userDetailsMutation.isPending ? "Updating..." : "Update"}
           </Button>
-        </CardFooter>
-      </Card>
-    </CustomSkeloton>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

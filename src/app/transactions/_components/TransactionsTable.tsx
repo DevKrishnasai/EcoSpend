@@ -30,9 +30,10 @@ import { DataTableViewOptions } from "@/components/table/DataTableViewOptions";
 import { Button } from "@/components/ui/button";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { toast } from "sonner";
-import { Delete, Download, Trash } from "lucide-react";
+import { Download, Trash } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { DeleteTransaction } from "../actions";
+import { cn } from "@/lib/utils";
 
 export const TransactionsTable = ({
   transactions,
@@ -99,7 +100,6 @@ export const TransactionsTable = ({
       cell: ({ row }) => {
         const date = new Date(row.original.date);
         const formattedDate = date.toLocaleDateString("default", {
-          timeZone: "UTC",
           day: "numeric",
           month: "short",
           year: "numeric",
@@ -134,7 +134,6 @@ export const TransactionsTable = ({
     },
     {
       id: "actions",
-
       enableHiding: false,
       cell: ({ row }) => {
         return (
@@ -147,7 +146,6 @@ export const TransactionsTable = ({
                 toast.loading("Deleting transaction...", {
                   id: "delete-transaction",
                 });
-                console.log("row.original", row.original);
                 deleteMutation.mutate(row.original);
               }}
             >
@@ -214,26 +212,34 @@ export const TransactionsTable = ({
     toast.loading("Exporting data...", {
       id: "exporting",
     });
-    const visibleColumns = _getVisibleLeafColumns(table);
-    const visibleColumnKeys = visibleColumns.map((col) => col.id);
+    try {
+      const visibleColumns = _getVisibleLeafColumns(table);
+      const visibleColumnKeys = visibleColumns.map((col) => col.id);
 
-    const sortedAndFilteredRows = table.getSortedRowModel().rows.map((row) => {
-      const rowData: any = {};
-      visibleColumnKeys.forEach((key) => {
-        if (key === "date") {
-          rowData[key] = row.original[key].toString();
-        } else {
-          rowData[key] = row.original[key as keyof typeof row.original];
-        }
+      const sortedAndFilteredRows = table
+        .getSortedRowModel()
+        .rows.map((row) => {
+          const rowData: any = {};
+          visibleColumnKeys.forEach((key) => {
+            if (key === "date") {
+              rowData[key] = row.original[key].toString();
+            } else {
+              rowData[key] = row.original[key as keyof typeof row.original];
+            }
+          });
+          return rowData;
+        });
+
+      const csv = generateCsv(csvConfig)(sortedAndFilteredRows);
+      download(csvConfig)(csv);
+      toast.success("successfully exported data...", {
+        id: "exporting",
       });
-      return rowData;
-    });
-
-    const csv = generateCsv(csvConfig)(sortedAndFilteredRows);
-    download(csvConfig)(csv);
-    toast.success("successfully exported data...", {
-      id: "exporting",
-    });
+    } catch (error) {
+      toast.error("something went wrong cannot export data...", {
+        id: "exporting",
+      });
+    }
   };
 
   return (
@@ -326,8 +332,12 @@ export const TransactionsTable = ({
         <Button
           variant="outline"
           size="sm"
-          className="flex gap-2 items-center"
+          className={cn(
+            "flex gap-2 items-center",
+            transactions.length === 0 && "cursor-not-allowed opacity-50"
+          )}
           onClick={handleExport}
+          disabled={transactions.length === 0}
         >
           <Download size={15} />
           Export

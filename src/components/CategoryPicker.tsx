@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/popover";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { TCategories, TCategory, TTransaction, TType } from "@/utils/types";
-import { categoriesSchema, categorySchema } from "@/lib/schema";
+import { TCategories, TTransaction, TType } from "@/utils/types";
+import { categoriesSchema } from "@/lib/schema";
 import {
   UseFormClearErrors,
   UseFormGetValues,

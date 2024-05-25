@@ -32,8 +32,6 @@ const HistroySelector = ({
     queryFn: () => fetch(`/api/historys/periods`).then((res) => res.json()),
   });
 
-  console.log("@@@@@@data", data);
-
   return (
     <Tabs
       value={period}
@@ -95,7 +93,6 @@ const YearHistory = ({
           month: timePeriod.month,
           year: parseInt(val),
         }));
-        console.log("val", val);
       }}
     >
       <SelectTrigger className="min-w-[90px] w-full lg:w-[100px]">
@@ -134,7 +131,6 @@ const MonthHistory = ({
           month: parseInt(val),
           year: timePeriod.year,
         }));
-        console.log("val", val);
       }}
     >
       <SelectTrigger className="min-w-[100px] w-full lg:w-[120px]">

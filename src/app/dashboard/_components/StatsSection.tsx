@@ -1,15 +1,20 @@
 "use client";
 import { DateRangePicker } from "@/components/ui/DateRangePicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import OverviewSection from "./OverviewSection";
 import OverCategoriesSection from "./OverCategoriesSection";
 import OverChartsSection from "./OverChartsSection";
 import AddTransaction from "./AddTransaction";
-import { useQuery } from "@tanstack/react-query";
 import { TUser } from "@/utils/types";
+import { useQuery } from "@tanstack/react-query";
 
 const StatsSection = () => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const [random, setRandom] = useState(Math.random());
   const [date, setDate] = useState<DateRange>({
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -22,7 +27,7 @@ const StatsSection = () => {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 ">
       <div className="flex flex-col justify-center items-center gap-2 md:flex-row lg:justify-end -mb-4">
         {/* <p className="text-2xl md:text-3xl font-bold">overview </p> */}
         <DateRangePicker

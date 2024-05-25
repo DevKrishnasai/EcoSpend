@@ -36,7 +36,9 @@ export const transactionSchema = z.object({
     })
     .multipleOf(0.01),
   description: z.string().optional(),
-  date: z.coerce.date(),
+  date: z.coerce.date({
+    message: "please select a date",
+  }),
 });
 
 export const categorySchema = z.object({

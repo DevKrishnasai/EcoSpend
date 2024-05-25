@@ -17,10 +17,6 @@ const CustomCard = ({
     <div
       className={cn(
         "w-1/2 flex-1 min-w-[150px] md:flex-none md:w-[200px] h-[90px] flex gap-3 text-black dark:text-white justify-center items-center shadow-black shadow-sm border-2 hover:shadow-none dark:shadow-white rounded-lg font-bold"
-        // title === "Balance" && "bg-black"
-        // title === "Income" && "bg-green-800",
-        // title === "Expense" && "bg-red-800",
-        // title === "Balance" && value < 0 && "bg-red-800  animate-pulse "
       )}
     >
       {icon}

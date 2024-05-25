@@ -1,9 +1,9 @@
 "use client";
+import { SetStateAction, Dispatch } from "react";
 import { cn } from "@/lib/utils";
 import { TNavItem } from "@/utils/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SetStateAction, Dispatch } from "react";
 
 const NavItems = ({
   label,

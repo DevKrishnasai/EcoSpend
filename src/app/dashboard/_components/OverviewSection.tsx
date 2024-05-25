@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
 import CustomCard from "./CustomCard";
 import { DateRange } from "react-day-picker";
 import { useQuery } from "@tanstack/react-query";
 import { TStats } from "@/app/api/stats/balance/route";
-import { TrendingDown, TrendingUp, Wallet, Wallet2 } from "lucide-react";
+import { TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const OverviewSection = ({

@@ -20,7 +20,6 @@ import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { TUser } from "@/utils/types";
 
 const SearchBoxForCountries = ({
-  register,
   setValue,
   value,
 }: {
@@ -31,14 +30,14 @@ const SearchBoxForCountries = ({
   const [open, setOpen] = useState(false);
   const [country, setCountry] = useState(value);
   return (
-    <section className="flex justify-start items-center gap-5 md:gap-20">
+    <section className="flex flex-col lg:flex-row lg:justify-between items-center">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] md:w-[400px] justify-between"
+            className="w-full lg:w-[400px] justify-between lg:flex-1"
           >
             {country
               ? currencies.find((currency) => currency.country === country)
@@ -80,9 +79,8 @@ const SearchBoxForCountries = ({
         </PopoverContent>
       </Popover>
       {country && (
-        <div className="text-sm text-wrap">
-          <span className="md:inline hidden">Your Currency is</span>
-          <span className="md:hidden inline">Currency </span>
+        <div className="text-sm text-wrap lg:flex-1 text-center mt-4 lg:mt-0">
+          <span className="">Your Currency is</span>
           <span className="font-bold ml-2">
             {currencies.find((c) => c.country === country)?.symbol}
           </span>

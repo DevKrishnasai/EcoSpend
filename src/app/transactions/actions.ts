@@ -10,7 +10,6 @@ export async function DeleteTransaction(data: TRangedTransactions[0]) {
     const session = await auth();
     if (!session?.user) redirect(LOGIN);
 
-    console.log("@#############transaction", data);
     const transaction = await prisma.transaction.findFirst({
       where: {
         id: data.id,
@@ -24,7 +23,6 @@ export async function DeleteTransaction(data: TRangedTransactions[0]) {
       prisma.transaction.delete({
         where: {
           id: data.id,
-          userId: session.user.id || "",
         },
       }),
       prisma.monthHistory.update({
@@ -41,7 +39,7 @@ export async function DeleteTransaction(data: TRangedTransactions[0]) {
             expense: { decrement: data.amount },
           }),
           ...(data.type === "Income" && {
-            expense: { decrement: data.amount },
+            income: { decrement: data.amount },
           }),
         },
       }),
@@ -58,7 +56,7 @@ export async function DeleteTransaction(data: TRangedTransactions[0]) {
             expense: { decrement: data.amount },
           }),
           ...(data.type === "Income" && {
-            expense: { decrement: data.amount },
+            income: { decrement: data.amount },
           }),
         },
       }),
