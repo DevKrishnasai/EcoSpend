@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { CountUp } from "use-count-up";
 import { cn } from "@/lib/utils";
+import CustomSkeloton from "@/components/CustomSkeloton";
 
 const OverChartsSection = ({
   random,
@@ -33,7 +34,7 @@ const OverChartsSection = ({
     year: new Date().getFullYear(),
   });
 
-  const { data } = useQuery<THistory>({
+  const { data, isFetching } = useQuery<THistory>({
     queryKey: ["history", timePeriod, period, random],
     queryFn: () =>
       fetch(
@@ -52,16 +53,20 @@ const OverChartsSection = ({
       />
       <div
         className={cn(
-          " h-[300px] rounded-md shadow-md flex justify-center items-center ",
+          " h-[300px] rounded-md shadow-md flex justify-center items-center mb-4",
           data && data.length === 0 && "border"
         )}
       >
-        {data && data.length === 0 && (
-          <div className="flex flex-col justify-center items-center">
-            <p className="font-bold text-base">No data found</p>
-            <span className="text-sm">try selecting other {period}</span>
-          </div>
-        )}
+        {isFetching ||
+          !data ||
+          (data && data.length === 0 && (
+            <CustomSkeloton isLoading={isFetching} full={true} opacity={20}>
+              <div className="flex flex-col justify-center items-center">
+                <p className="font-bold text-base">No data found</p>
+                <span className="text-sm">try selecting other {period}</span>
+              </div>
+            </CustomSkeloton>
+          ))}
         {data && data.length > 0 && (
           <Chart data={data || []} period={period} currency={currency} />
         )}

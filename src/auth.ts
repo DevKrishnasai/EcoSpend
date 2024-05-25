@@ -20,5 +20,14 @@ export const authConfig = {
       },
     }),
   ],
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) {
+        return url;
+      } else {
+        return `${baseUrl}/dashboard`;
+      }
+    },
+  },
 } satisfies NextAuthConfig;
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

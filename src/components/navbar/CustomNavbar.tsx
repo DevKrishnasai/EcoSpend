@@ -39,7 +39,7 @@ const CustomNavbar = ({ user }: { user: User | undefined }) => {
     <div className="w-full my-2">
       <nav className="hidden mx-auto lg:w-11/12 md:flex justify-between items-center border rounded-full px-4 py-1 shadow-sm">
         <Link href="/" className="text-2xl font-bold ">
-          <span className=""> EcoSpend</span>
+          <span className="ml-4"> EcoSpend</span>
         </Link>
         <div className="flex items-center px-2 text-sm font-medium lg:px-4 py-2">
           {items.map((item) => (

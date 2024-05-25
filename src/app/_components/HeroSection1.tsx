@@ -122,8 +122,8 @@ const HeroSection1 = () => {
             as="button"
             className="text-xs md:text-sm dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
           >
+            <Goal size={17} />
             <Link href="/api/auth/signin">
-              <Goal size={17} />
               <span>Get Started</span>
             </Link>
           </HoverBorderGradient>

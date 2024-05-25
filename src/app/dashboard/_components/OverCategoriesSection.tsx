@@ -25,12 +25,8 @@ const OverCategoriesSection = ({
 
   return (
     <div className="w-full flex gap-2 min-h-[200px] mb-5">
-      <CustomSkeloton isLoading={isFetching} full={true}>
-        <CategoryStats type="Income" data={data || { stats: [] }} />
-      </CustomSkeloton>
-      <CustomSkeloton isLoading={isFetching} full={true}>
-        <CategoryStats type="Expense" data={data || { stats: [] }} />
-      </CustomSkeloton>
+      <CategoryStats type="Income" data={data || { stats: [] }} />
+      <CategoryStats type="Expense" data={data || { stats: [] }} />
     </div>
   );
 };
