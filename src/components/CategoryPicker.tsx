@@ -52,7 +52,7 @@ export function CategoryPicker({
     refetch,
     data: categories,
   } = useQuery<TCategories>({
-    queryKey: ["full-catagories"],
+    queryKey: ["full-catagories", type],
     queryFn: async () => {
       const data = await fetch(`/api/categories?type=${type}`);
       const jsonData = await data.json();
