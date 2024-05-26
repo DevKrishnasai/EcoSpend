@@ -9,7 +9,10 @@ import { redirect } from "next/navigation";
 
 export async function NewCategory(data: TCategory) {
   const session = await auth();
-  if (!session?.user?.id) redirect(LOGIN);
+  if (!session?.user?.id) {
+    redirect(LOGIN);
+    return false;
+  }
 
   await prisma.category.create({
     data: {
@@ -25,10 +28,14 @@ export async function NewCategory(data: TCategory) {
 export async function NewTransaction(data: TTransaction) {
   try {
     const session = await auth();
-    if (!session?.user?.id) redirect(LOGIN);
+    if (!session?.user?.id) {
+      redirect(LOGIN);
+      return false;
+    }
 
     const date = new Date(data.date); // Ensure this is in UTC
 
+    // Convert date to local date in "Asia/Kolkata" timezone
     const localDate = new Date(
       date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
     );
@@ -36,9 +43,9 @@ export async function NewTransaction(data: TTransaction) {
     const month = localDate.getMonth(); // Adding 1 since months are zero-based
     const year = localDate.getFullYear();
 
-    await prisma.$transaction([
+    await prisma.$transaction(async (prisma) => {
       // Create transaction
-      prisma.transaction.create({
+      await prisma.transaction.create({
         data: {
           amount: data.amount,
           date: date.toISOString(), // Save date in UTC
@@ -46,21 +53,22 @@ export async function NewTransaction(data: TTransaction) {
           type: data.type,
           category: data.category,
           categoryIcon: data.categoryIcon,
-          userId: session.user.id,
+          userId: session?.user?.id || "",
         },
-      }),
+      });
+
       // Update month history
-      prisma.monthHistory.upsert({
+      await prisma.monthHistory.upsert({
         where: {
           day_month_year_userId: {
             day,
             month,
             year,
-            userId: session.user.id,
+            userId: session?.user?.id || "",
           },
         },
         create: {
-          userId: session.user.id,
+          userId: session?.user?.id || "",
           day,
           month,
           year,
@@ -75,18 +83,19 @@ export async function NewTransaction(data: TTransaction) {
             increment: data.type === "Expense" ? data.amount : 0,
           },
         },
-      }),
+      });
+
       // Update year history
-      prisma.yearHistory.upsert({
+      await prisma.yearHistory.upsert({
         where: {
           month_year_userId: {
             month,
             year,
-            userId: session.user.id,
+            userId: session?.user?.id || "",
           },
         },
         create: {
-          userId: session.user.id,
+          userId: session?.user?.id || "",
           month,
           year,
           income: data.type === "Income" ? data.amount : 0,
@@ -100,12 +109,13 @@ export async function NewTransaction(data: TTransaction) {
             increment: data.type === "Expense" ? data.amount : 0,
           },
         },
-      }),
-    ]);
+      });
+    });
 
     revalidatePath("/dashboard");
     return true;
   } catch (error) {
-    console.log(error);
+    console.error("Error creating new transaction:", error);
+    return false;
   }
 }

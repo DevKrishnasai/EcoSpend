@@ -77,6 +77,7 @@ export function CategoryPicker({
               "justify-between w-full",
               isFetching && "cursor-not-allowed"
             )}
+            disabled={isFetching}
           >
             {getValues("category")
               ? getValues("categoryIcon") + " " + getValues("category")

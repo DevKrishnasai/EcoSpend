@@ -1,69 +1,91 @@
 "use server";
+
 import { auth } from "@/auth";
-import { TRangedTransactions } from "../api/transactions-history/route";
-import { redirect } from "next/navigation";
-import { LOGIN } from "@/utils/constants";
 import prisma from "@/db";
+import { LOGIN } from "@/utils/constants";
+import { TRangedTransactions } from "../api/transactions-history/route";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function DeleteTransaction(data: TRangedTransactions[0]) {
   try {
     const session = await auth();
-    if (!session?.user) redirect(LOGIN);
+    if (!session?.user?.id) {
+      redirect(LOGIN);
+      return false;
+    }
 
     const transaction = await prisma.transaction.findFirst({
       where: {
         id: data.id,
-        userId: session.user.id || "",
+        userId: session.user.id,
       },
     });
 
-    if (!transaction) return false;
+    if (!transaction) {
+      console.error("Transaction not found for deletion:", data.id);
+      return false;
+    }
 
-    await prisma.$transaction([
-      prisma.transaction.delete({
+    console.log("########### transaction ###########", transaction);
+
+    const date = new Date(transaction.date); // Ensure this is in UTC
+    const localDate = new Date(
+      date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+    const day = localDate.getDate();
+    const month = localDate.getMonth(); // Adding 1 since months are zero-based
+    const year = localDate.getFullYear();
+
+    await prisma.$transaction(async (prisma) => {
+      await prisma.transaction.delete({
         where: {
           id: data.id,
         },
-      }),
-      prisma.monthHistory.update({
+      });
+
+      await prisma.monthHistory.update({
         where: {
           day_month_year_userId: {
-            userId: session.user.id || "",
-            day: new Date(data.date).getDate(),
-            month: new Date(data.date).getMonth(),
-            year: new Date(data.date).getFullYear(),
+            userId: session?.user?.id || "",
+            day,
+            month,
+            year,
           },
         },
         data: {
-          ...(data.type === "Expense" && {
-            expense: { decrement: data.amount },
+          ...(transaction.type === "Expense" && {
+            expense: { decrement: transaction.amount },
           }),
-          ...(data.type === "Income" && {
-            income: { decrement: data.amount },
+          ...(transaction.type === "Income" && {
+            income: { decrement: transaction.amount },
           }),
         },
-      }),
-      prisma.yearHistory.update({
+      });
+
+      await prisma.yearHistory.update({
         where: {
           month_year_userId: {
-            userId: session.user.id || "",
-            month: new Date(data.date).getMonth(),
-            year: new Date(data.date).getFullYear(),
+            userId: session?.user?.id || "",
+            month,
+            year,
           },
         },
         data: {
-          ...(data.type === "Expense" && {
-            expense: { decrement: data.amount },
+          ...(transaction.type === "Expense" && {
+            expense: { decrement: transaction.amount },
           }),
-          ...(data.type === "Income" && {
-            income: { decrement: data.amount },
+          ...(transaction.type === "Income" && {
+            income: { decrement: transaction.amount },
           }),
         },
-      }),
-    ]);
+      });
+    });
 
+    revalidatePath("/dashboard");
     return true;
   } catch (error) {
-    console.log("error", error);
+    console.error("Error deleting transaction:", error);
+    return false;
   }
 }
