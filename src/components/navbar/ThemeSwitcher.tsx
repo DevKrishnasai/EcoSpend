@@ -1,11 +1,9 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { TThemes } from "@/utils/types";
 
 export function ThemeSwitcher({ fullWidth = false }: { fullWidth?: boolean }) {
   const { setTheme, theme } = useTheme();

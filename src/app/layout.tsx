@@ -22,7 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ReactQueryProvider>
-          <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeProvider
+            attribute="class"
+            disableTransitionOnChange
+            defaultTheme="dark"
+          >
             <Navbar />
             {children}
             <Toaster
