@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: "EcoSpend - Your Ultimate Budget Tracking App",
   description:
     "Take control of your finances with EcoSpend. Track expenses, set budgets, and achieve your financial goals effortlessly.",
+  creator: "Krishna Sai",
+  icons: "favicon.png",
 };
 
 export default function RootLayout({

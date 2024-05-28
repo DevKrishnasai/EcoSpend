@@ -18,7 +18,7 @@ import {
   IconSignature,
   IconTableColumn,
 } from "@tabler/icons-react";
-import { getSession, signIn } from "next-auth/react";
+import { getSession, signIn, signOut } from "next-auth/react";
 import { ReactNode, useEffect, useState } from "react";
 import { User } from "next-auth";
 import { authConfig } from "@/auth";
@@ -82,11 +82,15 @@ const HeroSection1 = () => {
               containerClassName="rounded-full "
               as="button"
               className="text-sm dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+              onClick={async () =>
+                await signIn("google", {
+                  callbackUrl: "/dashboard",
+                  redirect: true,
+                })
+              }
             >
               <LogIn size={17} />
-              <Link href="/api/auth/signin">
-                <span>Sign In</span>
-              </Link>
+              <span>Sign In</span>
             </HoverBorderGradient>
           )}
         </nav>
@@ -121,11 +125,15 @@ const HeroSection1 = () => {
             containerClassName="rounded-full "
             as="button"
             className="text-xs md:text-sm dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            onClick={async () =>
+              await signIn("google", {
+                callbackUrl: "/dashboard",
+                redirect: true,
+              })
+            }
           >
             <Goal size={17} />
-            <Link href="/api/auth/signin">
-              <span>Get Started</span>
-            </Link>
+            <span>Get Started</span>
           </HoverBorderGradient>
         )}
         <Spotlight

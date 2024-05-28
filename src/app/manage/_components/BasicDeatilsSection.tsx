@@ -93,13 +93,14 @@ const BasicDeatilsSection = () => {
       </CardHeader>
       <CardContent>
         <form className="space-y-6" onSubmit={handleSubmit(updateUserDetails)}>
-          <CustomSkeloton isLoading={isFetching}>
+          <CustomSkeloton isLoading={isFetching} opacity={90}>
             <Input
               {...register("name", {
                 required: true,
               })}
               placeholder="Name"
               className={errors.name ? "error border" : ""}
+              disabled={isFetching}
             />
           </CustomSkeloton>
           {errors.name && (
@@ -108,13 +109,21 @@ const BasicDeatilsSection = () => {
           <CustomSkeloton isLoading={isFetching}>
             <Input {...register("email")} placeholder="Email" disabled={true} />
           </CustomSkeloton>
-          <CustomSkeloton isLoading={isFetching}>
+          {isFetching ? (
+            <CustomSkeloton isLoading={isFetching}>
+              <Input
+                {...register("currency")}
+                placeholder="Currency"
+                disabled={true}
+              />
+            </CustomSkeloton>
+          ) : (
             <SearchBoxForCountries
               register={register}
               setValue={setValue}
               value={getValues("country")}
             />
-          </CustomSkeloton>
+          )}
 
           {errors.country && (
             <span className="text-red-500 text-xs">

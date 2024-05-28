@@ -176,7 +176,7 @@ const CategoryCreator = ({
           <Button
             className={cn(
               type === "Income" ? "bg-green-800" : "bg-red-800",
-              "w-full",
+              "w-full text-white",
               isSubmitting && "cursor-not-allowed"
             )}
             variant="outline"

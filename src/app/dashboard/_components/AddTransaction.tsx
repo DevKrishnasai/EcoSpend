@@ -36,7 +36,7 @@ const AddTransaction = ({
           {!open && (
             <PiggyBank
               size={50}
-              className="border-2 border-black rounded-full text-black dark:text-white dark:border-white text-3xl p-2 cursor-pointer"
+              className="border-2 border-black rounded-full text-black dark:text-white dark:border-white text-3xl p-2 cursor-pointer animate-spin hover:animate-none"
               onClick={() => setOpen(true)}
             />
           )}
