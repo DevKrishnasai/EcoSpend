@@ -68,7 +68,7 @@ const HeroSection1 = () => {
             as="button"
             className="text-sm dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
             onClick={() => {
-              window.location.href = "";
+              window.location.href = "https://devkrishnasai.vercel.app/";
             }}
           >
             <Mail size={17} />
